@@ -78,6 +78,7 @@ def main():
         
         live_video_placeholder.empty()
         live_video_placeholder = webrtc_streamer(key="example", video_processor_factory=VideoProcessor,rtc_configuration={"iceServers": token.ice_servers}, desired_playing_state= True)
+        frames = []
         if live_video_placeholder.video_processor :
             live_video_placeholder.video_processor.recording = True
             while live_video_placeholder.video_processor :
@@ -89,8 +90,8 @@ def main():
                 else :
                     os.write(1,b"Checking else condition \n")
                     frames = live_video_placeholder.video_processor.frames
-                    save_video(frames)
                     break
+        save_video(frames)
 
     else:
         recording_button = st.button("Start new recording", on_click=toggleRecordingStatus)
