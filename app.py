@@ -70,7 +70,7 @@ def main():
         recording_button = st.button("Stop Recording", on_click=toggleRecordingStatus)
         
         account_sid = 'AC12fd17343f1554d20e202e30f2f25d33'
-        auth_token = '73c9ef27d4cb55db6f552f5792135693'
+        auth_token = '40d4406146f8598cf0b08e0e8a508460'
         client = Client(account_sid, auth_token)
 
         token = client.tokens.create()
