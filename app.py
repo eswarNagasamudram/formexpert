@@ -68,7 +68,7 @@ def main():
         print(f"SESSIONSTATE - {st.session_state.recording_status}")
         recording_button = st.button("Stop Recording", on_click=toggleRecordingStatus)
         live_video_placeholder.empty()
-        live_video_placeholder = webrtc_streamer(key="example", video_processor_factory=VideoProcessor)
+        live_video_placeholder = webrtc_streamer(key="example", video_processor_factory=VideoProcessor,rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
         if live_video_placeholder.video_processor :
             live_video_placeholder.video_processor.recording = True
             # os.write(1, b"Entering here  \n")
