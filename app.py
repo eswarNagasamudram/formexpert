@@ -21,8 +21,6 @@ class VideoProcessor(VideoProcessorBase):
         if not self.recording:
             return super().recv_queued(frames)
         
-        if time.time() - self.start_time > self.duration:
-            self.recording = False
         
         for frame in frames:
             self.frames.append(frame.to_ndarray(format = "bgr24"))
@@ -70,7 +68,7 @@ def main():
         print(f"SESSIONSTATE - {st.session_state.recording_status}")
         recording_button = st.button("Stop Recording", on_click=toggleRecordingStatus)
         live_video_placeholder.empty()
-        live_video_placeholder = webrtc_streamer(key="example", desired_playing_state= True, video_processor_factory=VideoProcessor)
+        live_video_placeholder = webrtc_streamer(key="example", video_processor_factory=VideoProcessor)
         if live_video_placeholder.video_processor :
             live_video_placeholder.video_processor.recording = True
             # os.write(1, b"Entering here  \n")
