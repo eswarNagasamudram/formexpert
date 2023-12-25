@@ -21,7 +21,8 @@ class VideoProcessor(VideoProcessorBase):
     def recv_queued(self, frames: List) -> Coroutine[Any, Any, List]:
         if not self.recording:
             return super().recv_queued(frames)
-        
+        if time.time() - self.start_time() > self.duration :
+            self.recording = False
         
         for frame in frames:
             self.frames.append(frame.to_ndarray(format = "bgr24"))
@@ -45,7 +46,6 @@ def save_video(frames):
 
 
 def on_stop_callback():
-    os.write(1, b"Starting to rerun \n")
     st.session_state.recording_status = 2
     st.rerun()
 
@@ -79,16 +79,14 @@ def main():
         live_video_placeholder = webrtc_streamer(key="example", video_processor_factory=VideoProcessor,rtc_configuration={"iceServers": token.ice_servers})
         if live_video_placeholder.video_processor :
             live_video_placeholder.video_processor.recording = True
-            # os.write(1, b"Entering here  \n")
-            # while live_video_placeholder.video_processor :
-            #     if live_video_placeholder.video_processor.recording == True :
-            #         os.write(1,b"Sleeping zzzzzz \n")
-            #         time.sleep(1)
-            #         continue
-            #     else :
-            #         frames = live_video_placeholder.video_processor.frames
-            #         save_video(frames)
-            #         break
+            while live_video_placeholder.video_processor :
+                if live_video_placeholder.video_processor.recording == True :
+                    time.sleep(1)
+                    continue
+                else :
+                    frames = live_video_placeholder.video_processor.frames
+                    save_video(frames)
+                    break
 
     else:
         recording_button = st.button("Start new recording", on_click=toggleRecordingStatus)
