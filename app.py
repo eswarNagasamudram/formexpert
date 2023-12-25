@@ -21,7 +21,7 @@ class VideoProcessor(VideoProcessorBase):
     def recv_queued(self, frames: List) -> Coroutine[Any, Any, List]:
         if not self.recording:
             return super().recv_queued(frames)
-        if time.time() - self.start_time() > self.duration :
+        if time.time() - self.start_time > self.duration :
             self.recording = False
         
         for frame in frames:
