@@ -1,5 +1,5 @@
 import streamlit as st
-from streamlit_webrtc import VideoTransformerBase, webrtc_streamer, VideoProcessorBase
+from streamlit_webrtc import  webrtc_streamer, VideoProcessorBase
 import cv2
 import numpy as np
 import io
@@ -44,8 +44,7 @@ class VideoTransformer(VideoProcessorBase):
 def main():
     st.title("Form expert")
 
-    duration = st.number_input("Set the duration of recording (in seconds):", min_value=1, value=5)
-
+    duration = 10
     webrtc_ctx = webrtc_streamer(key="example", video_processor_factory=VideoTransformer)
 
     if webrtc_ctx.video_transformer:
