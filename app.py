@@ -38,7 +38,7 @@ def save_video(frames):
 
     fourcc = cv2.VideoWriter_fourcc(*"avc1")
     height, width, channel = frames[0].shape 
-    out = cv2.VideoWriter("recorded_video.mp4", fourcc, 20.0, (width, height))
+    out = cv2.VideoWriter("recorded_video.mov", fourcc, 20.0, (width, height))
     for frame in frames:
         out.write(frame)
     out.release()
@@ -95,7 +95,7 @@ def main():
 
     else:
         recording_button = st.button("Start new recording", on_click=toggleRecordingStatus)
-        with open('recorded_video.mp4', 'rb') as video:
+        with open('recorded_video.mov', 'rb') as video:
             live_video_placeholder = st.video(video, format="video/mp4", start_time=0)
         with st.spinner("Getting feedback for your workout..."):
             st.write("Generating feedback")
