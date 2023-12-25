@@ -7,6 +7,7 @@ import json
 from streamlit_webrtc import  webrtc_streamer, VideoProcessorBase
 import os
 from twilio.rest import Client
+import imageio
 
 class VideoProcessor(VideoProcessorBase):
     def __init__(self):
@@ -36,12 +37,24 @@ def save_video(frames):
     if not frames:
         return
 
-    fourcc = cv2.VideoWriter_fourcc(*"avc1")
-    height, width, channel = frames[0].shape 
-    out = cv2.VideoWriter("recorded_video.mov", fourcc, 20.0, (width, height))
+    # fourcc = cv2.VideoWriter_fourcc(*"avc1")
+    # height, width, channel = frames[0].shape 
+    # out = cv2.VideoWriter("recorded_video.mov", fourcc, 20.0, (width, height))
+    # for frame in frames:
+    #     out.write(frame)
+    # out.release()
+    output_file = "recorded_video.mp4"
+        
+    # Create a video writer using imageio
+    writer = imageio.get_writer(output_file, fps=20)
+    
     for frame in frames:
-        out.write(frame)
-    out.release()
+        # Convert BGR to RGB
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        # Append the RGB frame to the video
+        writer.append_data(rgb_frame)
+
+    writer.close()
     on_stop_callback()
 
 
