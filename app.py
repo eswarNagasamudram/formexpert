@@ -22,12 +22,15 @@ class VideoProcessor(VideoProcessorBase):
         
         if time.time() - self.start_time > self.duration:
             self.recording = False
+            self.save_video()
+            self.callback
         
         for frame in frames:
             self.frames.append(frame.to_ndarray(format = "bgr24"))
 
         return super().recv_queued(frames)
          
+
 
 def save_video(frames):
     print(f"Saved video - {len(frames)} frames")
@@ -40,6 +43,12 @@ def save_video(frames):
     for frame in frames:
         out.write(frame)
     out.release()
+    on_stop_callback()
+
+
+def on_stop_callback():
+    st.session_state.recording_status = 2
+    st.rerun()
 
 def main():
     st.title("FORM EXPERT AI")
@@ -62,19 +71,16 @@ def main():
         recording_button = st.button("Stop Recording", on_click=toggleRecordingStatus)
         live_video_placeholder.empty()
         live_video_placeholder = webrtc_streamer(key="example", desired_playing_state=True, video_processor_factory=VideoProcessor)
-        frames = []
         if live_video_placeholder.video_processor :
             live_video_placeholder.video_processor.recording = True
             print("Entering here")
-            while True :
+            while live_video_placeholder.video_processor :
                 if live_video_placeholder.video_processor.recording == True :
-                    time.sleep(0.5)
+                    time.sleep(1)
                     continue
                 else :
                     frames = live_video_placeholder.video_processor.frames
                     save_video(frames)
-                    st.session_state.recording_status = 2
-                    st.rerun()
                     break
 
     else:
