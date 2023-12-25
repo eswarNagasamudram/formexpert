@@ -6,6 +6,7 @@ from generate_response import FormFeedback
 import json
 from streamlit_webrtc import  webrtc_streamer, VideoProcessorBase
 import os
+from twilio.rest import Client
 
 class VideoProcessor(VideoProcessorBase):
     def __init__(self):
@@ -67,8 +68,15 @@ def main():
         print("Recording button is modified to --STOP RECORDING----")
         print(f"SESSIONSTATE - {st.session_state.recording_status}")
         recording_button = st.button("Stop Recording", on_click=toggleRecordingStatus)
+        
+        account_sid = 'AC12fd17343f1554d20e202e30f2f25d33'
+        auth_token = '73c9ef27d4cb55db6f552f5792135693'
+        client = Client(account_sid, auth_token)
+
+        token = client.tokens.create()
+        
         live_video_placeholder.empty()
-        live_video_placeholder = webrtc_streamer(key="example", video_processor_factory=VideoProcessor,rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+        live_video_placeholder = webrtc_streamer(key="example", video_processor_factory=VideoProcessor,rtc_configuration={"iceServers": token.ice_servers})
         if live_video_placeholder.video_processor :
             live_video_placeholder.video_processor.recording = True
             # os.write(1, b"Entering here  \n")
