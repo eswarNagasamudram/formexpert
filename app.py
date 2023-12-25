@@ -5,6 +5,7 @@ import time
 from generate_response import FormFeedback
 import json
 from streamlit_webrtc import  webrtc_streamer, VideoProcessorBase
+import os
 
 class VideoProcessor(VideoProcessorBase):
     def __init__(self):
@@ -33,7 +34,7 @@ class VideoProcessor(VideoProcessorBase):
 
 
 def save_video(frames):
-    print(f"Saved video - {len(frames)} frames")
+    os.write(f"Saved video - {len(frames)} frames")
     if not frames:
         return
 
@@ -47,6 +48,7 @@ def save_video(frames):
 
 
 def on_stop_callback():
+    os.write("Starting to rerun")
     st.session_state.recording_status = 2
     st.rerun()
 
@@ -70,12 +72,13 @@ def main():
         print(f"SESSIONSTATE - {st.session_state.recording_status}")
         recording_button = st.button("Stop Recording", on_click=toggleRecordingStatus)
         live_video_placeholder.empty()
-        live_video_placeholder = webrtc_streamer(key="example", desired_playing_state=True, video_processor_factory=VideoProcessor)
+        live_video_placeholder = webrtc_streamer(key="example", desired_playing_state= True, video_processor_factory=VideoProcessor)
         if live_video_placeholder.video_processor :
             live_video_placeholder.video_processor.recording = True
-            print("Entering here")
+            os.write("Entering here")
             while live_video_placeholder.video_processor :
                 if live_video_placeholder.video_processor.recording == True :
+                    os.write("Sleeping zzzzzz")
                     time.sleep(1)
                     continue
                 else :
