@@ -111,7 +111,6 @@ def main():
         with open('recorded_video.mp4', 'rb') as video:
             live_video_placeholder = st.video(video, format="video/mp4", start_time=0)
         with st.spinner("Getting feedback for your workout..."):
-            st.write("Generating feedback")
             generator = FormFeedback()
             json_data = generator.get_feedback("recorded_video.mp4")
             print("JSON DATA IS ----------\n")
