@@ -36,7 +36,7 @@ def save_video(frames):
     if not frames:
         return
 
-    fourcc = cv2.VideoWriter_fourcc(*"H264")
+    fourcc = cv2.VideoWriter_fourcc(*"avc1")
     height, width, channel = frames[0].shape 
     out = cv2.VideoWriter("recorded_video.mp4", fourcc, 20.0, (width, height))
     for frame in frames:
@@ -46,6 +46,7 @@ def save_video(frames):
 
 
 def on_stop_callback():
+    os.write(1,b"calling rerun")
     st.session_state.recording_status = 2
     st.rerun()
 
