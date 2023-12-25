@@ -76,14 +76,17 @@ def main():
         token = client.tokens.create()
         
         live_video_placeholder.empty()
-        live_video_placeholder = webrtc_streamer(key="example", video_processor_factory=VideoProcessor,rtc_configuration={"iceServers": token.ice_servers})
+        live_video_placeholder = webrtc_streamer(key="example", video_processor_factory=VideoProcessor,rtc_configuration={"iceServers": token.ice_servers}, desired_playing_state= True)
         if live_video_placeholder.video_processor :
             live_video_placeholder.video_processor.recording = True
             while live_video_placeholder.video_processor :
+                os.write(1,b"Entering the loop \n")
                 if live_video_placeholder.video_processor.recording == True :
+                    os.write(1,b"Sleeping zzz \n")
                     time.sleep(1)
                     continue
                 else :
+                    os.write(1,b"Checking else condition \n")
                     frames = live_video_placeholder.video_processor.frames
                     save_video(frames)
                     break
