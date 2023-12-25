@@ -34,7 +34,7 @@ class VideoProcessor(VideoProcessorBase):
 
 
 def save_video(frames):
-    os.write(1, b"Saved video frames")
+    os.write(1, b"Saved video frames \n")
     if not frames:
         return
 
@@ -48,7 +48,7 @@ def save_video(frames):
 
 
 def on_stop_callback():
-    os.write(1, b"Starting to rerun")
+    os.write(1, b"Starting to rerun \n")
     st.session_state.recording_status = 2
     st.rerun()
 
@@ -75,10 +75,10 @@ def main():
         live_video_placeholder = webrtc_streamer(key="example", desired_playing_state= True, video_processor_factory=VideoProcessor)
         if live_video_placeholder.video_processor :
             live_video_placeholder.video_processor.recording = True
-            os.write(1, b"Entering here")
+            os.write(1, b"Entering here  \n")
             while live_video_placeholder.video_processor :
                 if live_video_placeholder.video_processor.recording == True :
-                    os.write(1,"Sleeping zzzzzz")
+                    os.write(1,b"Sleeping zzzzzz \n")
                     time.sleep(1)
                     continue
                 else :
