@@ -46,7 +46,7 @@ def save_video(frames):
 
 
 def on_stop_callback():
-    os.write(1,b"calling rerun")
+    os.write(1,b"calling rerun \n")
     st.session_state.recording_status = 2
     st.rerun()
 
