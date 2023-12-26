@@ -3,6 +3,8 @@ import vertexai
 from vertexai.preview.generative_models import GenerativeModel, Part
 from google.oauth2 import service_account
 from pydantic import BaseModel
+import streamlit as st
+import os
 
 
 class FormFeedback(BaseModel):
@@ -27,7 +29,11 @@ class FormFeedback(BaseModel):
     return response.candidates[0].content.parts[0].text
 
   def get_feedback(self, file_path:str):
-    credentials = service_account.Credentials.from_service_account_file(filename="vertex-key.json")
+    credentials = None
+    if "STREAMLIT_SHAREDCORS" in os.environ:
+      credentials = service_account.Credentials.from_service_account_info(st.secrets["gcs_connection"])
+    else:
+      credentials = service_account.Credentials.from_service_account_file(filename="vertex-key.json")
     vertexai.init(project = "kyc-gpt", credentials=credentials)
     video_path = file_path
     with open(video_path,"rb") as video_file :
